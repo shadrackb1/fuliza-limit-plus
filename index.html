@@ -4,35 +4,66 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Fuliza Limit Plus</title>
+    <title>Fuliza Limit Plus | Secure Upgrade Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        -webkit-tap-highlight-color: transparent;
+      :root {
+        --safaricom-green: #47B04B;
+        --safaricom-red: #E21F26;
       }
-      .safaricom-green { color: #47B04B; }
-      .bg-safaricom-green { background-color: #47B04B; }
-      .border-safaricom-green { border-color: #47B04B; }
-      .focus-safaricom-green:focus { ring-color: #47B04B; border-color: #47B04B; }
+      body {
+        font-family: 'Lexend', sans-serif;
+        -webkit-tap-highlight-color: transparent;
+        background-color: #f8fafc;
+      }
+      .safaricom-green { color: var(--safaricom-green); }
+      .bg-safaricom-green { background-color: var(--safaricom-green); }
+      .border-safaricom-green { border-color: var(--safaricom-green); }
+      
+      /* Subtle brand pattern */
+      .bg-pattern {
+        background-image: radial-gradient(var(--safaricom-green) 0.5px, transparent 0.5px);
+        background-size: 24px 24px;
+        opacity: 0.03;
+      }
+
+      @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+      }
+      .shimmer {
+        position: relative;
+        overflow: hidden;
+      }
+      .shimmer::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        animation: shimmer 2s infinite;
+      }
     </style>
   <script type="importmap">
 {
   "imports": {
-    "react/": "https://esm.sh/react@^19.2.4/",
     "react": "https://esm.sh/react@^19.2.4",
     "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
     "@google/genai": "https://esm.sh/@google/genai@^1.41.0",
     "canvas-confetti": "https://esm.sh/canvas-confetti@^1.9.4",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.4",
-    "vite": "https://esm.sh/vite@^7.3.1"
+    "vite": "https://esm.sh/vite@^7.3.1",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.4"
   }
 }
 </script>
 </head>
-  <body class="bg-gray-50 text-gray-900 overflow-x-hidden">
+  <body class="text-gray-900 overflow-x-hidden relative">
+    <div class="fixed inset-0 bg-pattern pointer-events-none"></div>
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>
