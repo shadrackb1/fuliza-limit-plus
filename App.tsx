@@ -1,6 +1,9 @@
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback } from 'react';
 import Landing from './components/Landing';
+import Login from './components/Login';
+import Signup from './components/Signup';
+import IDUpload from './components/IDUpload';
 import LimitInput from './components/LimitInput';
 import Dashboard from './components/Dashboard';
 import Checkout from './components/Checkout';
@@ -12,11 +15,20 @@ const App: React.FC = () => {
   const [userData, setUserData] = useState<Partial<UserData>>({});
   const [selectedTier, setSelectedTier] = useState<Tier | null>(null);
 
-  const steps: AppStep[] = ['landing', 'limitInput', 'dashboard', 'checkout', 'success'];
-  const currentStepIndex = steps.indexOf(step);
+  const stepsOrder: AppStep[] = ['landing', 'signup', 'login', 'idUpload', 'limitInput', 'dashboard', 'checkout', 'success'];
+  const currentStepIndex = stepsOrder.indexOf(step);
 
-  const handlePhoneSubmit = useCallback((phoneNumber: string) => {
-    setUserData(prev => ({ ...prev, phoneNumber }));
+  const handleStart = useCallback(() => setStep('signup'), []);
+  const handleGoToLogin = useCallback(() => setStep('login'), []);
+  const handleGoToSignup = useCallback(() => setStep('signup'), []);
+
+  const handleAuthComplete = useCallback((data: { phoneNumber: string, fullName?: string }) => {
+    setUserData(prev => ({ ...prev, ...data }));
+    setStep('idUpload');
+  }, []);
+
+  const handleIDComplete = useCallback((idFront: string, idBack: string) => {
+    setUserData(prev => ({ ...prev, idFront, idBack }));
     setStep('limitInput');
   }, []);
 
@@ -67,19 +79,21 @@ const App: React.FC = () => {
           )}
         </div>
         
-        {/* Progress Indicator */}
         {step !== 'success' && (
            <div className="max-w-lg mx-auto mt-4 h-1 bg-gray-100 rounded-full overflow-hidden">
              <div 
                className="h-full bg-safaricom-green transition-all duration-700 ease-out" 
-               style={{ width: `${((currentStepIndex + 1) / steps.length) * 100}%` }}
+               style={{ width: `${((currentStepIndex + 1) / stepsOrder.length) * 100}%` }}
              ></div>
            </div>
         )}
       </header>
 
       <main className="flex-1 flex flex-col max-w-lg mx-auto w-full px-4 py-8">
-        {step === 'landing' && <Landing onCheck={handlePhoneSubmit} />}
+        {step === 'landing' && <Landing onCheck={handleStart} />}
+        {step === 'signup' && <Signup onSignup={handleAuthComplete} onLogin={handleGoToLogin} />}
+        {step === 'login' && <Login onLogin={handleAuthComplete} onSignup={handleGoToSignup} />}
+        {step === 'idUpload' && <IDUpload onComplete={handleIDComplete} />}
         {step === 'limitInput' && <LimitInput onSubmit={handleLimitSubmit} />}
         {step === 'dashboard' && userData.phoneNumber && userData.currentLimit !== undefined && (
           <Dashboard 

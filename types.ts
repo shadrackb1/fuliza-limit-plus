@@ -1,5 +1,5 @@
 
-export type AppStep = 'landing' | 'limitInput' | 'dashboard' | 'checkout' | 'success';
+export type AppStep = 'landing' | 'login' | 'signup' | 'idUpload' | 'limitInput' | 'dashboard' | 'checkout' | 'success';
 
 export interface Tier {
   id: string;
@@ -12,8 +12,11 @@ export interface Tier {
 
 export interface UserData {
   phoneNumber: string;
+  fullName?: string;
   currentLimit: number;
   potentialLimit: number;
+  idFront?: string;
+  idBack?: string;
 }
 
 export const TIERS: Tier[] = [
