@@ -1,6 +1,7 @@
 
 import React, { useState, useCallback } from 'react';
 import Landing from './components/Landing';
+import LimitInput from './components/LimitInput';
 import Dashboard from './components/Dashboard';
 import Checkout from './components/Checkout';
 import Success from './components/Success';
@@ -8,16 +9,20 @@ import { AppStep, Tier, UserData } from './types';
 
 const App: React.FC = () => {
   const [step, setStep] = useState<AppStep>('landing');
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userData, setUserData] = useState<Partial<UserData>>({});
   const [selectedTier, setSelectedTier] = useState<Tier | null>(null);
 
-  const handleEligibilityCheck = useCallback((phoneNumber: string) => {
-    // Simulate API call to fetch current Fuliza status
-    setUserData({
-      phoneNumber,
-      currentLimit: 500,
-      potentialLimit: 10000
-    });
+  const handlePhoneSubmit = useCallback((phoneNumber: string) => {
+    setUserData(prev => ({ ...prev, phoneNumber }));
+    setStep('limitInput');
+  }, []);
+
+  const handleLimitSubmit = useCallback((currentLimit: number) => {
+    setUserData(prev => ({
+      ...prev,
+      currentLimit,
+      potentialLimit: Math.min(currentLimit * 10, 50000)
+    }));
     setStep('dashboard');
   }, []);
 
@@ -32,7 +37,7 @@ const App: React.FC = () => {
 
   const handleReset = useCallback(() => {
     setStep('landing');
-    setUserData(null);
+    setUserData({});
     setSelectedTier(null);
   }, []);
 
@@ -58,17 +63,18 @@ const App: React.FC = () => {
       </header>
 
       <main className="flex-1 flex flex-col max-w-md mx-auto w-full px-4 py-6">
-        {step === 'landing' && <Landing onCheck={handleEligibilityCheck} />}
-        {step === 'dashboard' && userData && (
+        {step === 'landing' && <Landing onCheck={handlePhoneSubmit} />}
+        {step === 'limitInput' && <LimitInput onSubmit={handleLimitSubmit} />}
+        {step === 'dashboard' && userData.phoneNumber && userData.currentLimit !== undefined && (
           <Dashboard 
-            userData={userData} 
+            userData={userData as UserData} 
             onSelectTier={handleSelectTier} 
           />
         )}
-        {step === 'checkout' && selectedTier && userData && (
+        {step === 'checkout' && selectedTier && userData.phoneNumber && (
           <Checkout 
             tier={selectedTier} 
-            userData={userData}
+            userData={userData as UserData}
             onSuccess={handlePaymentSuccess} 
           />
         )}

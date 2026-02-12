@@ -1,5 +1,5 @@
 
-export type AppStep = 'landing' | 'dashboard' | 'checkout' | 'success';
+export type AppStep = 'landing' | 'limitInput' | 'dashboard' | 'checkout' | 'success';
 
 export interface Tier {
   id: string;
@@ -40,5 +40,21 @@ export const TIERS: Tier[] = [
     newLimit: 10000,
     color: 'bg-yellow-50 border-yellow-200 text-yellow-800',
     badge: 'Max'
+  },
+  {
+    id: 'platinum',
+    name: 'Platinum',
+    fee: 2500,
+    newLimit: 30000,
+    color: 'bg-blue-50 border-blue-200 text-blue-800',
+    badge: 'Ultra'
+  },
+  {
+    id: 'diamond',
+    name: 'Diamond',
+    fee: 5000,
+    newLimit: 50000,
+    color: 'bg-purple-50 border-purple-200 text-purple-800',
+    badge: 'Elite'
   }
 ];
