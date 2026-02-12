@@ -1,0 +1,7 @@
+{
+  "name": "Fuliza Limit Plus",
+  "description": "A high-conversion, professional fintech portal for upgrading your M-Pesa Fuliza limit with secure M-Pesa STK Push integration.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
