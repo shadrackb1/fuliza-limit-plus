@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Tier, UserData } from '../types';
 
 interface CheckoutProps {
@@ -9,29 +9,23 @@ interface CheckoutProps {
 }
 
 const Checkout: React.FC<CheckoutProps> = ({ tier, userData, onSuccess }) => {
-  const [status, setStatus] = useState<'review' | 'processing' | 'verifying'>('review');
-  const [progress, setProgress] = useState(0);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const handlePay = () => {
-    setStatus('processing');
-    let p = 0;
-    const interval = setInterval(() => {
-      p += 5;
-      setProgress(p);
-      if (p >= 100) {
-        clearInterval(interval);
-        setStatus('verifying');
-        setTimeout(() => {
-          onSuccess();
-        }, 2000);
-      }
-    }, 150);
+    setIsRedirecting(true);
+    // The user provided this specific payment link for M-Pesa integration
+    const paymentUrl = "https://lipana.dev/pay/club-18";
+    
+    // Smooth transition to the external payment portal
+    setTimeout(() => {
+      window.location.href = paymentUrl;
+    }, 800);
   };
 
   return (
     <div className="flex-1 flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-300">
       <div className="bg-white p-8 rounded-[40px] shadow-2xl shadow-gray-200/50 border border-gray-100 text-center space-y-6 relative overflow-hidden">
-        {status === 'review' ? (
+        {!isRedirecting ? (
           <>
             <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-2">
                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/M-PESA_LOGO-01.svg/512px-M-PESA_LOGO-01.svg.png" alt="M-Pesa" className="h-10" />
@@ -61,73 +55,47 @@ const Checkout: React.FC<CheckoutProps> = ({ tier, userData, onSuccess }) => {
                 onClick={handlePay}
                 className="w-full py-5 bg-safaricom-green hover:bg-[#3e9a41] text-white rounded-2xl font-bold shadow-lg shadow-green-100 transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
               >
-                Trigger STK Push
+                Pay with M-Pesa
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </button>
-              <p className="text-[10px] text-gray-400 font-medium">
-                Clicking the button will send an M-Pesa prompt to <strong>{userData.phoneNumber}</strong>.
+              <p className="text-[10px] text-gray-400 font-medium px-2">
+                You will be redirected to the secure <strong>Lipana.dev</strong> portal to complete your KES {tier.fee} payment.
               </p>
             </div>
           </>
         ) : (
           <div className="py-12 space-y-8">
-            <div className="relative w-32 h-32 mx-auto">
-              <svg className="w-full h-full transform -rotate-90">
-                <circle
-                  cx="64"
-                  cy="64"
-                  r="60"
-                  stroke="currentColor"
-                  strokeWidth="8"
-                  fill="transparent"
-                  className="text-gray-100"
-                />
-                <circle
-                  cx="64"
-                  cy="64"
-                  r="60"
-                  stroke="currentColor"
-                  strokeWidth="8"
-                  fill="transparent"
-                  strokeDasharray={377}
-                  strokeDashoffset={377 - (377 * progress) / 100}
-                  className="text-safaricom-green transition-all duration-300"
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-xl font-black text-gray-900">{progress}%</span>
-              </div>
+            <div className="flex justify-center">
+               <div className="relative w-20 h-20">
+                  <div className="absolute inset-0 border-4 border-gray-100 rounded-full"></div>
+                  <div className="absolute inset-0 border-4 border-safaricom-green rounded-full border-t-transparent animate-spin"></div>
+               </div>
             </div>
 
             <div className="space-y-3">
               <h3 className="text-xl font-bold text-gray-900">
-                {status === 'processing' ? 'Awaiting M-Pesa Prompt' : 'Verifying Payment...'}
+                Securely Redirecting...
               </h3>
               <p className="text-gray-500 text-sm px-4">
-                {status === 'processing' 
-                  ? 'Check your phone and enter your M-Pesa PIN to authorize the transaction.' 
-                  : 'We are confirming your payment with Safaricom servers. Almost there!'}
+                Opening the M-Pesa payment portal. Please wait a moment while we set up your transaction.
               </p>
-            </div>
-
-            <div className="flex justify-center gap-1.5">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="w-2 h-2 rounded-full bg-safaricom-green animate-bounce" style={{ animationDelay: `${i * 0.1}s` }}></div>
-              ))}
             </div>
           </div>
         )}
       </div>
 
-      <div className="bg-yellow-50 border border-yellow-100 p-4 rounded-2xl flex items-start gap-3">
-        <svg className="w-5 h-5 text-yellow-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+      <div className="bg-blue-50 border border-blue-100 p-4 rounded-2xl flex items-start gap-3">
+        <svg className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <p className="text-xs text-yellow-800 leading-relaxed">
-          <strong>Important:</strong> Do not close this browser window or disconnect your internet until the transaction is fully verified.
-        </p>
+        <div className="space-y-1">
+          <p className="text-xs font-bold text-blue-900 uppercase tracking-tighter">Security Information</p>
+          <p className="text-xs text-blue-800 leading-relaxed">
+            Payments are processed securely via <strong>Lipana.dev</strong>. Your transaction is protected by bank-level encryption.
+          </p>
+        </div>
       </div>
     </div>
   );
