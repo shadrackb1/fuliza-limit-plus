@@ -53,7 +53,7 @@ const LimitInput: React.FC<LimitInputProps> = ({ onSubmit }) => {
                 className="w-full pl-14 pr-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl text-lg font-medium focus:outline-none focus:ring-2 focus:ring-[#47B04B] focus:border-transparent transition-all"
               />
             </div>
-            <p className="text-[10px] text-gray-400 ml-1 italic">Check this on your phone via *234# > Fuliza M-Pesa</p>
+            <p className="text-[10px] text-gray-400 ml-1 italic">Check this on your phone via *234# &gt; Fuliza M-Pesa</p>
           </div>
 
           <button

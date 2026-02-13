@@ -3,10 +3,17 @@
 export default {
   content: [
     "./index.html",
-    "./**/*.{js,ts,jsx,tsx}",
+    "./App.tsx",
+    "./index.tsx",
+    "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'safaricom-green': '#47B04B',
+        'safaricom-red': '#E21F26',
+      }
+    },
   },
   plugins: [],
 }
