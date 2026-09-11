@@ -1,10 +1,8 @@
-﻿# fuliza limit plus
+# Fuliza Limit Plus
 
-Fuliza Limit Plus | Secure Upgrade Portal
+<img src="./assets/header.svg" width="100%" alt="Fuliza Limit Plus" />
 
-## Stack
-
-react Â· vite Â· typescript Â· tailwindcss
+Secure upgrade portal experiment.
 
 ## Run locally
 
@@ -13,4 +11,4 @@ react Â· vite Â· typescript Â· tailwindcss
 
 ## License
 
-Private / all rights reserved.
+All rights reserved.
